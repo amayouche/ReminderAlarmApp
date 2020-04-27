@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ReminderActivity"></activity>
+        <activity android:name=".WakeupActivity"></activity>
+        <activity android:name=".ReminderActivity" />
         <activity android:name=".AlarmActivity" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".MainActivity">
@@ -22,6 +23,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver
+            android:name=".MyBroadcastRx"
+            android:enabled="true"
+            android:exported="true" />
     </application>
 
 </manifest>

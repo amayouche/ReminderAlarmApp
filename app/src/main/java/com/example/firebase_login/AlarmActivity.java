@@ -3,9 +3,13 @@ package com.example.firebase_login;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -36,7 +40,7 @@ import java.util.TimerTask;
 
 public class AlarmActivity extends AppCompatActivity implements View.OnClickListener {
 
-    TimePicker alarmTime;
+    TimePicker timePicker;
     TextClock currentTime;
     TextView user_name;
     String userName, ProMise, StePs;
@@ -145,7 +149,7 @@ public class AlarmActivity extends AppCompatActivity implements View.OnClickList
             findViewById(R.id.buttonStop).setOnClickListener(this);
             final Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE));
 
-            alarmTime = findViewById(R.id.timePicker);
+            timePicker = findViewById(R.id.timePicker);
             currentTime = findViewById(R.id.textClock);
 
             /*
@@ -182,7 +186,7 @@ public class AlarmActivity extends AppCompatActivity implements View.OnClickList
                 Toast.makeText(getApplicationContext(), "Failed to retrieve data.", Toast.LENGTH_SHORT).show();
             }
         });
-
+        /*
         Timer t = new Timer();
 
 
@@ -202,10 +206,10 @@ public class AlarmActivity extends AppCompatActivity implements View.OnClickList
                     }
             }
 
-        }, 0, 1000);
+        }, 0, 1000); */
 
     }
-
+/*
     private String AlarmTime() {
         Integer alarmHours = alarmTime.getCurrentHour();
         Integer alarmMinutes = alarmTime.getCurrentMinute();
@@ -228,7 +232,7 @@ public class AlarmActivity extends AppCompatActivity implements View.OnClickList
         }
         return stringAlarmTime;
 
-    }
+    } */
 
     @Override
     public void onClick(View v) {
@@ -247,7 +251,28 @@ public class AlarmActivity extends AppCompatActivity implements View.OnClickList
                 //startActivity(new Intent(AlarmActivity.this, ReminderActivity.class));
                 break;
             case R.id.buttonSet:
-                setTime = AlarmTime();
+                //setTime = AlarmTime();
+                Calendar calendar = Calendar.getInstance();
+                if (Build.VERSION.SDK_INT >=23) {
+                calendar.set(
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH),
+                        timePicker.getHour(),
+                        timePicker.getMinute(),
+                        0
+                );} else {
+                            calendar.set(
+                            calendar.get(Calendar.YEAR),
+                            calendar.get(Calendar.MONTH),
+                            calendar.get(Calendar.DAY_OF_MONTH),
+                            timePicker.getCurrentHour(),
+                            timePicker.getCurrentMinute(),
+                            0
+                    );
+
+                }
+                setAlarm(calendar.getTimeInMillis());
                 break;
             case R.id.buttonClear:
                 setTime = "";
@@ -256,5 +281,16 @@ public class AlarmActivity extends AppCompatActivity implements View.OnClickList
                 //r.stop();
                 break;
         }
+    }
+
+    private void setAlarm(long timeInMillis) {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, MyBroadcastRx.class);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+
+        alarmManager.setRepeating(AlarmManager.RTC, timeInMillis, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
+
+        Toast.makeText(this,"Alarm is set", Toast.LENGTH_SHORT).show();
     }
 }

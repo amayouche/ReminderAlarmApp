@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             }
                             else {
                                 finish();
-                                startActivity(new Intent(MainActivity.this, AlarmActivity.class));
+                                startActivity(new Intent(MainActivity.this, WakeupActivity.class));
                             }
                         }
 
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     };
                     uidRef.addListenerForSingleValueEvent(eventListener);
                     //finish();
-                    //startActivity(new Intent(MainActivity.this, ReminderActivity.class));
+                    //startActivity(new Intent(MainActivity.this, WakeupActivity.class));
 
                 } else {
                     Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
